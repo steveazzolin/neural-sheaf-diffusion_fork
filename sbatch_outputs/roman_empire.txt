@@ -1,0 +1,97 @@
+W&B offline, running your script from this directory will only write metadata locally.
+Downloading https://github.com/yandex-research/heterophilous-graphs/raw/main/data/roman_empire.npz
+Processing...
+Done!
+wandb: Tracking run with wandb version 0.13.1
+wandb: W&B syncing is set to `offline` in this directory.  
+wandb: Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+Running with wandb account: mcstewe
+Namespace(epochs=1000, lr=0.01, weight_decay=0.00011215791366362148, sheaf_decay=0.00011215791366362148, early_stopping=100, min_acc=0.0, stop_strategy='acc', d=3, layers=5, normalised=True, deg_normalised=False, linear=False, hidden_channels=32, input_dropout=0.7, dropout=0.0, left_weights=True, right_weights=True, add_lp=True, add_hp=False, use_act=True, second_linear=True, orth='householder', sheaf_act='tanh', edge_weights=True, sparse_learner=False, dataset='roman-empire', seed=43, cuda=0, folds=3, model='BundleSheaf', entity='mcstewe', evectors=0, max_t=1.0, int_method=None, step_size=1, max_iters=100, adjoint_method='adaptive_heun', adjoint=False, adjoint_step_size=1, tol_scale=1.0, tol_scale_adjoint=1.0, max_nfe=1000, no_early=False, earlystopxT=3, max_test_steps=100, sha='11e21b561d884713ab1a18a521a7dc2fb26b9361', graph_size=22662, input_dim=300, output_dim=18, device=device(type='cuda', index=0))
+  0%|          | 0/3 [00:00<?, ?it/s]/home/steve.azzolin/anaconda3/envs/nsd/lib/python3.9/site-packages/torch/cuda/__init__.py:145: UserWarning: 
+NVIDIA A100-SXM4-80GB with CUDA capability sm_80 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_37 sm_50 sm_60 sm_61 sm_70 sm_75 compute_37.
+If you want to use the NVIDIA A100-SXM4-80GB GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  warnings.warn(incompatible_device_warn.format(device_name, capability, " ".join(arch_list), device_name))
+ 33%|███▎      | 1/3 [03:20<06:41, 200.91s/it] 67%|██████▋   | 2/3 [04:23<01:59, 119.66s/it]100%|██████████| 3/3 [05:23<00:00, 92.43s/it] 100%|██████████| 3/3 [05:23<00:00, 107.91s/it]
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.000 MB of 0.000 MB uploaded (0.000 MB deduped)wandb: \ 0.000 MB of 0.000 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:          best_epoch █▃▁
+wandb:       best_test_acc ▁█▆
+wandb:        best_val_acc █▁█
+wandb:  fold0_tmp_test_acc ▁▂▄▅▅▆▆▆▆▇▇▇▇▇▇▇▇█████▆▇████████████████
+wandb: fold0_tmp_test_loss █▆▄▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:     fold0_train_acc ▁▂▄▄▅▆▅▅▆▆▆▆▆▇▇▇▇▇▇▇▇▇▆▇▇▇▇▇▇▇██████████
+wandb:    fold0_train_loss █▆▄▄▄▃▄▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▃▃▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁
+wandb:       fold0_val_acc ▁▂▅▅▅▆▅▆▆▇▇▇▇▇▇▇▇▇█▇▇█▆▇████████████████
+wandb:      fold0_val_loss █▆▄▃▃▂▃▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            test_acc ▁
+wandb:        test_acc_std ▁
+wandb:             val_acc ▁
+wandb: 
+wandb: Run summary:
+wandb:          best_epoch 289
+wandb:       best_test_acc 0.36587
+wandb:        best_val_acc 0.37688
+wandb:  fold0_tmp_test_acc 0.35069
+wandb: fold0_tmp_test_loss 2.04042
+wandb:     fold0_train_acc 0.39661
+wandb:    fold0_train_loss 1.86112
+wandb:       fold0_val_acc 0.36187
+wandb:      fold0_val_loss 2.02976
+wandb:            test_acc 36.50429
+wandb:        test_acc_std 0.35072
+wandb:             val_acc 37.35216
+wandb: 
+wandb: You can sync this run to the cloud by running:
+wandb: wandb sync /home/steve.azzolin/sheafs/neural-sheaf-diffusion_fork/wandb/offline-run-20230801_171053-sn3vwy76
+wandb: Find logs at: ./wandb/offline-run-20230801_171053-sn3vwy76/logs
+Fold 0 | Epochs: 537 | Best epoch: 437
+Test acc: 0.3604
+Best val acc: 0.3765
+Laplacian 0: Max: 0.0003, Min: -0.9426, Avg: -0.3137, Abs avg: 0.3137
+Laplacian 1: Max: 0.9001, Min: -0.9823, Avg: -0.2202, Abs avg: 0.3798
+Laplacian 2: Max: 0.9963, Min: -0.9971, Avg: -0.1316, Abs avg: 0.3783
+Laplacian 3: Max: 0.7479, Min: -0.9980, Avg: -0.2759, Abs avg: 0.4612
+Laplacian 4: Max: 0.9997, Min: -1.0000, Avg: -0.1363, Abs avg: 0.4056
+Epsilons 0: [ 0.018 -0.035  0.161 -0.112]
+Epsilons 1: [ 0.002  0.072  0.203 -0.099]
+Epsilons 2: [ 0.161  0.255  0.255 -0.103]
+Epsilons 3: [ 0.119  0.105  0.079 -0.167]
+Epsilons 4: [ 0.173  0.154  0.021 -0.154]
+Fold 1 | Epochs: 421 | Best epoch: 321
+Test acc: 0.3689
+Best val acc: 0.3672
+Laplacian 0: Max: 0.0196, Min: -0.8748, Avg: -0.2889, Abs avg: 0.2907
+Laplacian 1: Max: 0.8848, Min: -0.9713, Avg: -0.1667, Abs avg: 0.3594
+Laplacian 2: Max: 0.9940, Min: -0.9991, Avg: -0.1268, Abs avg: 0.4666
+Laplacian 3: Max: 0.9842, Min: -0.9990, Avg: -0.1433, Abs avg: 0.3090
+Laplacian 4: Max: 0.9931, Min: -0.9998, Avg: -0.2428, Abs avg: 0.4531
+Epsilons 0: [ 0.07   0.046  0.061 -0.025]
+Epsilons 1: [ 0.12   0.041  0.099 -0.198]
+Epsilons 2: [ 0.14   0.057  0.191 -0.189]
+Epsilons 3: [ 0.212  0.155 -0.048 -0.141]
+Epsilons 4: [ 0.258  0.214  0.194 -0.113]
+Fold 2 | Epochs: 389 | Best epoch: 289
+Test acc: 0.3659
+Best val acc: 0.3769
+Laplacian 0: Max: 0.0063, Min: -0.9645, Avg: -0.3207, Abs avg: 0.3215
+Laplacian 1: Max: 0.0437, Min: -0.9937, Avg: -0.2335, Abs avg: 0.2351
+Laplacian 2: Max: 0.9982, Min: -0.9999, Avg: -0.2178, Abs avg: 0.3807
+Laplacian 3: Max: 0.9974, Min: -0.9992, Avg: -0.1372, Abs avg: 0.4569
+Laplacian 4: Max: 0.9989, Min: -0.9999, Avg: -0.1327, Abs avg: 0.4510
+Epsilons 0: [ 0.064  0.047  0.076 -0.148]
+Epsilons 1: [ 0.035  0.046  0.052 -0.155]
+Epsilons 2: [ 0.071  0.111  0.166 -0.187]
+Epsilons 3: [ 0.01   0.135  0.078 -0.146]
+Epsilons 4: [ 0.014  0.259  0.134 -0.149]
+BundleSheaf on roman-empire | SHA: 11e21b561d884713ab1a18a521a7dc2fb26b9361
+Test acc: 36.5043 +/- 0.3507 | Val acc: 37.3522
+DONE
+Execution lasted 5 minutes
+wandb: Number of runs to be synced: 1
+wandb:   wandb/offline-run-20230801_171053-sn3vwy76
+wandb: NOTE: use wandb sync --clean to delete 3 synced runs from local directory.
+wandb: NOTE: use wandb sync --sync-all to sync 1 unsynced runs from local directory.
