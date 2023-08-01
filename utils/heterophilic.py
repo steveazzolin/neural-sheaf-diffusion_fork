@@ -274,26 +274,150 @@ class WebKB(InMemoryDataset):
 
 
 def get_fixed_splits(data, dataset_name, seed):
-    with np.load(f'splits/{dataset_name}_split_0.6_0.2_{seed}.npz') as splits_file:
-        train_mask = splits_file['train_mask']
-        val_mask = splits_file['val_mask']
-        test_mask = splits_file['test_mask']
+    if dataset_name not in ["roman-empire", "rmazon-ratings", "minesweeper", "tolokers", "questions"]:
+        with np.load(f'splits/{dataset_name}_split_0.6_0.2_{seed}.npz') as splits_file:
+            train_mask = splits_file['train_mask']
+            val_mask = splits_file['val_mask']
+            test_mask = splits_file['test_mask']
 
-    data.train_mask = torch.tensor(train_mask, dtype=torch.bool)
-    data.val_mask = torch.tensor(val_mask, dtype=torch.bool)
-    data.test_mask = torch.tensor(test_mask, dtype=torch.bool)
+        data.train_mask = torch.tensor(train_mask, dtype=torch.bool)
+        data.val_mask = torch.tensor(val_mask, dtype=torch.bool)
+        data.test_mask = torch.tensor(test_mask, dtype=torch.bool)
 
-    if dataset_name in {'cora', 'citeseer', 'pubmed'}:
-        data.train_mask[data.non_valid_samples] = False
-        data.test_mask[data.non_valid_samples] = False
-        data.val_mask[data.non_valid_samples] = False
-        print("Non zero masks", torch.count_nonzero(data.train_mask + data.val_mask + data.test_mask))
-        print("Nodes", data.x.size(0))
-        print("Non valid", len(data.non_valid_samples))
+        if dataset_name in {'cora', 'citeseer', 'pubmed'}:
+            data.train_mask[data.non_valid_samples] = False
+            data.test_mask[data.non_valid_samples] = False
+            data.val_mask[data.non_valid_samples] = False
+            print("Non zero masks", torch.count_nonzero(data.train_mask + data.val_mask + data.test_mask))
+            print("Nodes", data.x.size(0))
+            print("Non valid", len(data.non_valid_samples))
+        else:
+            assert torch.count_nonzero(data.train_mask + data.val_mask + data.test_mask) == data.x.size(0)
     else:
-        assert torch.count_nonzero(data.train_mask + data.val_mask + data.test_mask) == data.x.size(0)
-
+        data.train_mask = data.train_masks[:, seed]
+        data.val_mask = data.val_masks[:, seed]
+        data.test_mask = data.test_masks[:, seed]
     return data
+
+class HeterophilousGraphDataset(InMemoryDataset):
+    r"""The heterophilous graphs :obj:`"Roman-empire"`,
+    :obj:`"Amazon-ratings"`, :obj:`"Minesweeper"`, :obj:`"Tolokers"` and
+    :obj:`"Questions"` from the `"A Critical Look at the Evaluation of GNNs
+    under Heterophily: Are We Really Making Progress?"
+    <https://arxiv.org/abs/2302.11640>`_ paper.
+
+    Args:
+        root (str): Root directory where the dataset should be saved.
+        name (str): The name of the dataset (:obj:`"Roman-empire"`,
+            :obj:`"Amazon-ratings"`, :obj:`"Minesweeper"`, :obj:`"Tolokers"`,
+            :obj:`"Questions"`).
+        transform (callable, optional): A function/transform that takes in an
+            :obj:`torch_geometric.data.Data` object and returns a transformed
+            version. The data object will be transformed before every access.
+            (default: :obj:`None`)
+        pre_transform (callable, optional): A function/transform that takes in
+            an :obj:`torch_geometric.data.Data` object and returns a
+            transformed version. The data object will be transformed before
+            being saved to disk. (default: :obj:`None`)
+
+    **STATS:**
+
+    .. list-table::
+        :widths: 10 10 10 10 10
+        :header-rows: 1
+
+        * - Name
+          - #nodes
+          - #edges
+          - #features
+          - #classes
+        * - Roman-empire
+          - 22,662
+          - 32,927
+          - 300
+          - 18
+        * - Amazon-ratings
+          - 24,492
+          - 93,050
+          - 300
+          - 5
+        * - Minesweeper
+          - 10,000
+          - 39,402
+          - 7
+          - 2
+        * - Tolokers
+          - 11,758
+          - 519,000
+          - 10
+          - 2
+        * - Questions
+          - 48,921
+          - 153,540
+          - 301
+          - 2
+    """
+    url = ('https://github.com/yandex-research/heterophilous-graphs/raw/'
+           'main/data')
+
+    def __init__(
+        self,
+        root: str,
+        name: str,
+        transform: Optional[Callable] = None,
+        pre_transform: Optional[Callable] = None,
+    ):
+        self.name = name.lower().replace('-', '_')
+        assert self.name in [
+            'roman_empire',
+            'amazon_ratings',
+            'minesweeper',
+            'tolokers',
+            'questions',
+        ]
+
+        super().__init__(root, transform, pre_transform)
+        self.data, self.slices = torch.load(self.processed_paths[0])
+
+    @property
+    def raw_dir(self) -> str:
+        return osp.join(self.root, self.name, 'raw')
+
+    @property
+    def processed_dir(self) -> str:
+        return osp.join(self.root, self.name, 'processed')
+
+    @property
+    def raw_file_names(self) -> str:
+        return f'{self.name}.npz'
+
+    @property
+    def processed_file_names(self) -> str:
+        return 'data.pt'
+
+    def download(self):
+        download_url(f'{self.url}/{self.name}.npz', self.raw_dir)
+
+    def process(self):
+        raw = np.load(self.raw_paths[0], 'r')
+        x = torch.from_numpy(raw['node_features'])
+        y = torch.from_numpy(raw['node_labels'])
+        edge_index = torch.from_numpy(raw['edges']).t().contiguous()
+        edge_index = to_undirected(edge_index, num_nodes=x.size(0))
+        train_mask = torch.from_numpy(raw['train_masks']).t().contiguous()
+        val_mask = torch.from_numpy(raw['val_masks']).t().contiguous()
+        test_mask = torch.from_numpy(raw['test_masks']).t().contiguous()
+
+        data = Data(x=x, y=y, edge_index=edge_index, train_mask=train_mask,
+                    val_mask=val_mask, test_mask=test_mask)
+
+        if self.pre_transform is not None:
+            data = self.pre_transform(data)
+
+        torch.save(self.collate([data]), self.processed_paths[0])
+
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}(name={self.name})'
 
 
 def get_dataset(name):
@@ -306,6 +430,12 @@ def get_dataset(name):
         dataset = Actor(root=data_root, transform=T.NormalizeFeatures())
     elif name in ['cora', 'citeseer', 'pubmed']:
         dataset = Planetoid(root=data_root, name=name, transform=T.NormalizeFeatures())
+    elif name in ["roman-empire", "amazon-ratings", "minesweeper", "tolokers", "questions"]:
+        transform = T.Compose([T.ToUndirected(), T.NormalizeFeatures()])
+        dataset = HeterophilousGraphDataset(root=data_root, name=name, transform=transform)
+        dataset.data.train_masks = dataset.data.train_mask.clone()
+        dataset.data.val_masks = dataset.data.val_mask.clone()
+        dataset.data.test_masks = dataset.data.test_mask.clone()
     else:
         raise ValueError(f'dataset {name} not supported in dataloader')
 
