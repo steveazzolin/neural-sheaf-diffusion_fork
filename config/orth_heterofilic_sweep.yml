@@ -49,7 +49,7 @@ parameters:
     value: 200
   folds:
     distribution: constant
-    value: 10
+    value: 5
   orth:
     distribution: constant
     value: "householder"

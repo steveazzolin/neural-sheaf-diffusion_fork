@@ -1,11 +1,12 @@
 #!/bin/bash
-#SBATCH -p short
+#SBATCH -p chaos
+#SBATCH -A shared-sml-staff
 #SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=6
+#SBATCH --cpus-per-task=12
 #SBATCH --job-name=nsd
-#SBATCH -t 0-00:15
-#SBATCH --output=/home/steve.azzolin/sheafs/neural-sheaf-diffusion_fork/sbatch_outputs/sweep_heterofilic2.txt
-#SBATCH --error=/home/steve.azzolin/sheafs/neural-sheaf-diffusion_fork/sbatch_outputs/sweep_heterofilic2.txt
+#SBATCH -t 1-00
+#SBATCH --output=/nfs/data_chaos/sazzolin/sheafs/neural-sheaf-diffusion_fork/sbatch_outputs/sweep_heterofilic.txt
+#SBATCH --error=/nfs/data_chaos/sazzolin/sheafs/neural-sheaf-diffusion_fork/sbatch_outputs/sweep_heterofilic.txt
 #SBATCH --ntasks=1
 #SBATCH -N 1
 #SBATCH --mail-user=steve.azzolin@unitn.it
@@ -14,7 +15,7 @@
 
 start=`date +%s`
 
-wandb agent mcstewe/sheaf/bmof5ulj
+wandb agent mcstewe/sheaf/wwe7ub1w
 
 
 echo DONE

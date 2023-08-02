@@ -274,7 +274,7 @@ class WebKB(InMemoryDataset):
 
 
 def get_fixed_splits(data, dataset_name, seed):
-    if dataset_name not in ["roman-empire", "rmazon-ratings", "minesweeper", "tolokers", "questions"]:
+    if dataset_name not in ["roman_empire", "amazon_ratings", "minesweeper", "tolokers", "questions"]:
         with np.load(f'splits/{dataset_name}_split_0.6_0.2_{seed}.npz') as splits_file:
             train_mask = splits_file['train_mask']
             val_mask = splits_file['val_mask']
@@ -430,7 +430,7 @@ def get_dataset(name):
         dataset = Actor(root=data_root, transform=T.NormalizeFeatures())
     elif name in ['cora', 'citeseer', 'pubmed']:
         dataset = Planetoid(root=data_root, name=name, transform=T.NormalizeFeatures())
-    elif name in ["roman-empire", "amazon-ratings", "minesweeper", "tolokers", "questions"]:
+    elif name in ["roman_empire", "amazon_ratings", "minesweeper", "tolokers", "questions"]:
         transform = T.Compose([T.ToUndirected(), T.NormalizeFeatures()])
         dataset = HeterophilousGraphDataset(root=data_root, name=name, transform=transform)
         dataset.data.train_masks = dataset.data.train_mask.clone()
